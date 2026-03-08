@@ -16,13 +16,6 @@ export class HomepageService {
   async getHomepage(): Promise<any> {
     this.logger.log(this.getHomepage.name);
     try {
-      const cachedData = await this.cacheManager.get('homepage_data');
-      console.log('Cached data:', cachedData);
-      if (cachedData) {
-        this.logger.log('Returning cached data');
-        return cachedData;
-      }
-      this.logger.log('Cache miss, fetching from API');
       const res = await fetch(
         'https://jsonplaceholder.typicode.com/posts?_limit=5',
       );
