@@ -6,6 +6,9 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import { HomepageDataDto, HomepageResponseDto } from './dto';
+import { HOMEPAGE_API_URL } from './constant';
+import { mapResponseToHomepageResponseDto } from './mapper';
 
 @Injectable()
 export class HomepageService {
@@ -13,16 +16,14 @@ export class HomepageService {
 
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  async getHomepage(): Promise<any> {
+  async getHomepage(): Promise<HomepageResponseDto> {
     this.logger.log(this.getHomepage.name);
     try {
-      const res = await fetch(
-        'https://jsonplaceholder.typicode.com/posts?_limit=5',
-      );
-      const data = await res.json();
+      const res = await fetch(HOMEPAGE_API_URL);
+      const data: HomepageDataDto[] = await res.json();
       await this.cacheManager.set('homepage_data', data);
       this.logger.log('Fetched data from API and cached it');
-      return data;
+      return mapResponseToHomepageResponseDto(data);
     } catch (error) {
       this.logger.error(this.getHomepage.name, error);
       if (error instanceof Error) {
