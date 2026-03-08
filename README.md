@@ -61,6 +61,39 @@ A NestJS application with Redis caching for efficient data storage and retrieval
 $ pnpm install
 ```
 
+## Running the application
+
+### Using Docker (Recommended)
+
+1. Ensure Docker and Docker Compose are installed.
+2. Run the following command to start the application and Redis:
+
+```bash
+docker-compose up
+```
+
+The application will be available at http://localhost:3000.
+
+### Using npm/pnpm scripts
+
+1. Install dependencies:
+
+```bash
+pnpm install
+```
+
+2. Start Redis (if not using Docker):
+
+Make sure Redis is running on your system.
+
+3. Run the application:
+
+```bash
+pnpm run start:dev
+```
+
+The application will be available at http://localhost:3000.
+
 ### Key Components:
 - **App Module**: The root module that orchestrates all other modules.
 - **Config Module**: Manages environment variables for configuration (e.g., Redis host and port).
@@ -159,4 +192,4 @@ $ pnpm run test:cov
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This application is [MIT licensed](LICENSE).
