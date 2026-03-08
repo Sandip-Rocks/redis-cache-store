@@ -1,21 +1,3 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-
-## Description
-
-A NestJS application with Redis caching for efficient data storage and retrieval. This project demonstrates how to integrate Redis as a cache store in a NestJS application using the `@nestjs/cache-manager` module.
-
-## Installation
-
-```bash
-$ pnpm install
-```
-
 ## Architecture
 
 This application uses a modular architecture with the following components and data flow:
@@ -67,6 +49,16 @@ graph LR
     style DTO fill:#fce4ec
     style Mapper fill:#f8bbd9
     style Const fill:#e1bee7
+```
+
+## Description
+
+A NestJS application with Redis caching for efficient data storage and retrieval. This project demonstrates how to integrate Redis as a cache store in a NestJS application using the `@nestjs/cache-manager` module.
+
+## Installation
+
+```bash
+$ pnpm install
 ```
 
 ### Key Components:
