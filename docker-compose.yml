@@ -18,6 +18,8 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+    volumes:
+      - ./src/homepage/snapshot:/app/src/homepage/snapshot
     networks:
       - app-network
 
