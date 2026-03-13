@@ -21,6 +21,7 @@ graph LR
             AM[App Module]
             CM[Config Module]
             CacheM[Cache Module]
+            TM[Throttler Module]
         end
         
         subgraph "External"
@@ -28,7 +29,8 @@ graph LR
         end
     end
     
-    User --> HC
+    User --> TM
+    TM -->|rate limit check| HC
     HC --> HS
     HS --> CacheM
     CacheM --> Redis
@@ -37,13 +39,16 @@ graph LR
     HS --> Const
     AM --> CM
     AM --> CacheM
+    AM --> TM
     AM --> HM[Homepage Module]
     CM -.->|provides config| CacheM
+    CM -.->|provides throttle config| TM
     CacheM -.->|caches data| HS
     
     style AM fill:#e1f5fe
     style CM fill:#f3e5f5
     style CacheM fill:#e8f5e8
+    style TM fill:#fff9c4
     style HM fill:#fff3e0
     style Redis fill:#ffebee
     style DTO fill:#fce4ec
@@ -53,7 +58,10 @@ graph LR
 
 ## Description
 
-A NestJS application with Redis caching for efficient data storage and retrieval. This project demonstrates how to integrate Redis as a cache store in a NestJS application using the `@nestjs/cache-manager` module.
+A NestJS application with Redis caching and rate limiting (throttling) for efficient data storage and retrieval. This project demonstrates:
+- Redis integration using `@nestjs/cache-manager` module
+- Centralized configuration management with `@nestjs/config`
+- Rate limiting with `@nestjs/throttler` module with multiple throttle strategies
 
 ## Installation
 
@@ -96,8 +104,42 @@ The application will be available at http://localhost:3000.
 
 ### Key Components:
 - **App Module**: The root module that orchestrates all other modules.
-- **Config Module**: Manages environment variables for configuration (e.g., Redis host and port).
-- **Cache Module**: Integrates Redis as the cache store, configurable via environment variables.
+- **Config Module**: Manages environment variables for configuration (Redis, Throttler settings).
+- **Cache Module**: Integrates Redis as the cache store, configurable via the Config Module.
+- **Throttler Module**: Implements rate limiting with three throttle profiles (short, medium, long).
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+
+# Throttlers (TTL values in milliseconds)
+SHORT_THROTTLE_NAME=short
+SHORT_THROTTLE_TTL=1000
+SHORT_THROTTLE_LIMIT=3
+
+MEDIUM_THROTTLE_NAME=medium
+MEDIUM_THROTTLE_TTL=10000
+MEDIUM_THROTTLE_LIMIT=20
+
+LONG_THROTTLE_NAME=long
+LONG_THROTTLE_TTL=60000
+LONG_THROTTLE_LIMIT=100
+```
+
+### Throttler Profiles
+
+- **Short**: Allows 3 requests per second
+- **Medium**: Allows 20 requests per 10 seconds
+- **Long**: Allows 100 requests per 60 seconds
+
+When rate limits are exceeded, the API responds with a `429 (Too Many Requests)` status code.
 - **Homepage Module**: Demonstrates cache usage with controller, service, DTOs, mappers, and constants for handling requests.
 - **DTOs**: Data Transfer Objects for structuring request/response data.
 - **Mappers**: Utility functions to transform data between different formats.
